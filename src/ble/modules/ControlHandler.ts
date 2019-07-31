@@ -18,7 +18,7 @@ export class ControlHandler {
     return this.ble.readCharacteristicWithoutEncryption(CSServices.CrownstoneService, CrownstoneCharacteristics.SessionNonce)
       .then((rawNonce : Buffer) => {
         console.log("Got Nonce!")
-        let decryptedNonce = EncryptionHandler.decryptSessionNonce(rawNonce, this.ble.settings.guestKey);
+        let decryptedNonce = EncryptionHandler.decryptSessionNonce(rawNonce, this.ble.settings.basicKey);
 
         console.log("Decrypted Nonce", decryptedNonce)
         this.ble.settings.setSessionNonce(decryptedNonce);

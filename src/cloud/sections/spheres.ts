@@ -19,7 +19,7 @@ export const spheres = {
         return this._setupRequest('PUT', '/Spheres/{id}/admins', { data: { email: email }});
       case 'member':
         return this._setupRequest('PUT', '/Spheres/{id}/members', { data: { email: email }});
-      case 'guest':
+      case 'basic':
         return this._setupRequest('PUT', '/Spheres/{id}/guests', { data: { email: email }});
       default:
         return new Promise((resolve, reject) => {

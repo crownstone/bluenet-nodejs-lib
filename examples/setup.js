@@ -2,7 +2,15 @@ let BluenetLib = require("../dist/index");
 
 let bluenet = new BluenetLib.Bluenet()
 
-bluenet.setSettings({adminKey:'adminKeyForCrown', memberKey:'memberKeyForHome', guestKey:'guestKeyForOther'})
+bluenet.setSettings({
+  adminKey:         'adminKeyForCrown',
+  memberKey:        'memberKeyForHome',
+  basicKey:         'basicKeyForOther',
+  serviceDataKey :  'basicKeyForOther',
+  localizationKey:  'LocalizationKeyX',
+  meshNetworkKey :  'AGreatMeshNetKey',
+  meshAppKey :      'MyFavoMeshAppKey',
+});
 
 bluenet.getNearestSetupStone(rssiAtLeast = -80, returnFirstAcceptable = true)
   .then((peripheral) => {

@@ -16,6 +16,12 @@ class CloudHandler {
             this.userId = result.userId;
         });
     }
+    // getCurrentSphereId(userData) {
+    //   return this.login(userData)
+    //     .then(() => {
+    //       CLOUD.getDevices();
+    //     })
+    // }
     getKeys(sphereId) {
         return cloudAPI_1.CLOUD.forUser(this.userId).getKeys()
             .then((results) => {

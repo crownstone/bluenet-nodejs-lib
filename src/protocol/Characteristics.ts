@@ -23,6 +23,7 @@ export const SetupCharacteristics = {
   GoToDFU           : "24f100067d104805bfc17663a01c3bff",
   SetupControl      : "24f100077d104805bfc17663a01c3bff",
   SessionNonce      : "24f100087d104805bfc17663a01c3bff",
+  SetupControlV2    : "24f100097d104805bfc17663a01c3bff",
 }
 
 export const GeneralCharacteristics = {

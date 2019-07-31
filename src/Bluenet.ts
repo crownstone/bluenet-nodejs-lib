@@ -27,16 +27,16 @@ export default class Bluenet {
    * @param {string} referenceId
    * @param {boolean} encryptionEnabled
    */
-  setSettings(keys, referenceId="BluenetNodeJSLib", encryptionEnabled=true) {
-    this.settings.loadKeys(encryptionEnabled, keys.adminKey, keys.memberKey, keys.guestKey, referenceId)
+  setSettings(keys : keyMap, referenceId="BluenetNodeJSLib", encryptionEnabled=true) {
+    this.settings.loadKeys(encryptionEnabled, keys.adminKey, keys.memberKey, keys.basicKey, keys.serviceDataKey, keys.localizationKey, keys.meshNetworkKey, keys.meshAppKey, referenceId)
   }
 
 
   linkCloud(userData) {
-    if (userData.adminKey !== undefined && userData.guestKey !== undefined) {
+    if (userData.adminKey !== undefined && userData.serviceDataKey !== undefined) {
       return new Promise((resolve, reject) => {
         console.log("Keys found in userData, no need to link Cloud.");
-        this.settings.loadKeys(true, userData.adminKey, userData.memberKey, userData.guestKey, "UserData")
+        this.settings.loadKeys(true, userData.adminKey, userData.memberKey, userData.basicKey, userData.serviceDataKey, userData.localizationKey, userData.meshNetworkKey, userData.meshAppKey, "UserData")
         resolve();
       })
     }
@@ -46,7 +46,7 @@ export default class Bluenet {
           return this.cloud.getKeys(userData.sphereId);
         })
         .then((keys : any) => {
-          this.settings.loadKeys(true, keys.admin, keys.member, keys.guest, "CloudData");
+          this.settings.loadKeys(true, keys.ADMIN_KEY, keys.MEMBER_KEY, keys.BASIC_KEY, keys.SERVICE_DATA_KEY, keys.LOCALIZATION_KEY, keys.MESH_NETWORK_KEY, keys.MESH_APPLICATION_KEY, "CloudData");
         })
     }
   }
@@ -68,10 +68,10 @@ export default class Bluenet {
     })
   }
 
-  setupCrownstone(handle, crownstoneId, meshAccessAddress, ibeaconUUID, ibeaconMajor, ibeaconMinor) {
+  setupCrownstone(handle, sphereUid, crownstoneId, meshAccessAddress, meshDeviceKey, ibeaconUUID, ibeaconMajor, ibeaconMinor) {
     return this.connect(handle)
       .then(() => {
-        return this.setup.setup(crownstoneId, meshAccessAddress, ibeaconUUID, ibeaconMajor, ibeaconMinor)
+        return this.setup.setup(sphereUid, crownstoneId, meshAccessAddress, meshDeviceKey, ibeaconUUID, ibeaconMajor, ibeaconMinor)
       })
   }
 

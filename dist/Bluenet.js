@@ -21,13 +21,13 @@ class Bluenet {
      * @param {boolean} encryptionEnabled
      */
     setSettings(keys, referenceId = "BluenetNodeJSLib", encryptionEnabled = true) {
-        this.settings.loadKeys(encryptionEnabled, keys.adminKey, keys.memberKey, keys.guestKey, referenceId);
+        this.settings.loadKeys(encryptionEnabled, keys.adminKey, keys.memberKey, keys.basicKey, referenceId);
     }
     linkCloud(userData) {
-        if (userData.adminKey !== undefined && userData.guestKey !== undefined) {
+        if (userData.adminKey !== undefined && userData.basicKey !== undefined) {
             return new Promise((resolve, reject) => {
                 console.log("Keys found in userData, no need to link Cloud.");
-                this.settings.loadKeys(true, userData.adminKey, userData.memberKey, userData.guestKey, "UserData");
+                this.settings.loadKeys(true, userData.adminKey, userData.memberKey, userData.basicKey, "UserData");
                 resolve();
             });
         }

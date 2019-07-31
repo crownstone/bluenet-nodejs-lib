@@ -17,13 +17,16 @@ export class SetupHandler {
   }
 
 
-  setup(crownstoneId, meshAccessAddress, ibeaconUUID, ibeaconMajor, ibeaconMinor) {
+  setup(sphereUid, crownstoneId, meshAccessAddress, meshDeviceKey, ibeaconUUID, ibeaconMajor, ibeaconMinor) {
     return new Promise((resolve, reject) => {
-      if (!this.ble.settings.adminKey || !this.ble.settings.memberKey || !this.ble.settings.guestKey) {
+      if (!this.ble.settings.adminKey || !this.ble.settings.memberKey || !this.ble.settings.basicKey || !this.ble.settings.serviceDataKey || !this.ble.settings.localizationKey || !this.ble.settings.meshAppKey || !this.ble.settings.meshNetworkKey) {
         return reject(new BluenetError(BluenetErrorType.NO_ENCRYPTION_KEYS, "No encryption keys available. These are required to setup a Crownstone. Use either linkCloud or setSettings to load keys into Bluenet."))
       }
 
-      if (this.ble.connectedPeripheral.characteristics[CSServices.SetupService][SetupCharacteristics.SetupControl]) {
+      if (this.ble.connectedPeripheral.characteristics[CSServices.SetupService][SetupCharacteristics.SetupControlV2]) {
+        resolve(this._performFastSetupV2(sphereUid, crownstoneId, meshDeviceKey, ibeaconUUID, ibeaconMajor, ibeaconMinor));
+      }
+      else if (this.ble.connectedPeripheral.characteristics[CSServices.SetupService][SetupCharacteristics.SetupControl]) {
         resolve(this._performFastSetup(crownstoneId, meshAccessAddress, ibeaconUUID, ibeaconMajor, ibeaconMinor));
       }
       else {
@@ -31,6 +34,74 @@ export class SetupHandler {
       }
     })
   }
+
+
+  _performFastSetupV2(sphereUid, crownstoneId, meshDeviceKey, ibeaconUUID, ibeaconMajor, ibeaconMinor) {
+    let processHandler = (returnData) => {
+      let packet = new ResultPacket(returnData);
+      if (packet.valid) {
+        let payload = packet.getUInt16Payload()
+        if (payload == ResultValue.WAIT_FOR_SUCCESS) {
+          // thats ok
+          return ProcessType.CONTINUE
+        }
+        else if (payload == ResultValue.SUCCESS) {
+          return ProcessType.FINISHED
+        }
+        else {
+          return ProcessType.ABORT_ERROR
+        }
+      }
+      else {
+        // stop, something went wrong
+        return ProcessType.ABORT_ERROR
+      }
+    }
+
+    let writeCommand = () => {
+      this._commandSetupV2(
+        sphereUid,
+        crownstoneId,
+        this.ble.settings.adminKey,
+        this.ble.settings.memberKey,
+        this.ble.settings.basicKey,
+        this.ble.settings.serviceDataKey,
+        this.ble.settings.localizationKey,
+        this.ble.settings.meshNetworkKey,
+        this.ble.settings.meshAppKey,
+        meshDeviceKey,
+        ibeaconUUID,
+        ibeaconMajor,
+        ibeaconMinor
+      );
+    }
+
+    return this._handleSetupPhaseEncryption()
+      .then(() => {
+        return this.ble.setupNotificationStream(
+          CSServices.SetupService,
+          SetupCharacteristics.SetupControl,
+          writeCommand,
+          processHandler,
+          3
+        )
+      })
+      .then(() => {
+        LOG.info("BLUENET_LIB: SetupCommand Finished, disconnecting")
+        return this.ble.waitForPeripheralToDisconnect(10)
+      })
+      .then(() => {
+        LOG.info("BLUENET_LIB: Setup Finished")
+        this.ble.settings.exitSetup()
+      })
+      .catch((err) => {
+        this.ble.settings.exitSetup()
+        this.ble.settings.restoreEncryption()
+        this.ble.errorDisconnect()
+        throw err
+      })
+  }
+
 
   _performFastSetup(crownstoneId, meshAccessAddress, ibeaconUUID, ibeaconMajor, ibeaconMinor) {
     let processHandler = (returnData) => {
@@ -59,7 +130,7 @@ export class SetupHandler {
         crownstoneId,
         this.ble.settings.adminKey,
         this.ble.settings.memberKey,
-        this.ble.settings.guestKey,
+        this.ble.settings.basicKey,
         meshAccessAddress,
         ibeaconUUID,
         ibeaconMajor,
@@ -112,6 +183,44 @@ export class SetupHandler {
           })
       })
   }
+
+  _commandSetupV2(
+    sphereUid,
+    crownstoneId,
+    adminKey,
+    memberKey,
+    basicKey,
+    serviceDataKey,
+    localizationKey,
+    meshNetworkKey,
+    meshAppKey,
+    meshDeviceKey,
+    ibeaconUUID,
+    ibeaconMajor,
+    ibeaconMinor
+  ) {
+    let packet = ControlPacketsGenerator.getSetupPacketV2(
+      sphereUid,
+      crownstoneId,
+      adminKey,
+      memberKey,
+      basicKey,
+      serviceDataKey,
+      localizationKey,
+      meshNetworkKey,
+      meshAppKey,
+      meshDeviceKey,
+      ibeaconUUID,
+      ibeaconMajor,
+      ibeaconMinor
+    );
+    return this.ble.writeToCharacteristic(
+      CSServices.SetupService,
+      SetupCharacteristics.SetupControlV2,
+      packet
+    )
+  }
+
 
   _commandSetup(crownstoneId, adminKey, memberKey, guestKey, meshAccessAddress, ibeaconUUID, ibeaconMajor, ibeaconMinor) {
     let packet = ControlPacketsGenerator.getSetupPacket(

@@ -2,7 +2,15 @@ let BluenetLib = require("../dist/index");
 
 let bluenet = new BluenetLib.Bluenet();
 
-bluenet.setSettings({adminKey:'adminKeyForCrown', memberKey:'memberKeyForHome', guestKey:'guestKeyForOther'});
+bluenet.setSettings({
+  adminKey:         'adminKeyForCrown',
+  memberKey:        'memberKeyForHome',
+  basicKey:         'basicKeyForOther',
+  serviceDataKey :  'basicKeyForOther',
+  localizationKey:  'LocalizationKeyX',
+  meshNetworkKey :  'AGreatMeshNetKey',
+  meshAppKey :      'MyFavoMeshAppKey',
+});
 
 let handle = "e719476672b5"; // this is an UUID in OSX, mac address in Linux. Change this in the example when you run it.
 bluenet.connect(handle)

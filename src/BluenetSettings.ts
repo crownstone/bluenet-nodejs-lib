@@ -1,7 +1,7 @@
 export const UserLevel = {
   admin: 0,
   member: 1,
-  guest: 2,
+  basic: 2,
   setup: 100,
   unknown: 255,
 }
@@ -10,10 +10,14 @@ export const UserLevel = {
 export class BluenetSettings {
   encryptionEnabled = true;
 
-  adminKey  : Buffer = null;
-  memberKey : Buffer = null;
-  guestKey  : Buffer = null;
-  setupKey  : Buffer = null;
+  adminKey          : Buffer = null;
+  memberKey         : Buffer = null;
+  basicKey          : Buffer = null;
+  serviceDataKey    : Buffer = null;
+  localizationKey   : Buffer = null;
+  meshNetworkKey    : Buffer = null;
+  meshAppKey        : Buffer = null;
+  setupKey          : Buffer = null;
 
   referenceId  : string = null;
   sessionNonce : Buffer = null;
@@ -24,12 +28,16 @@ export class BluenetSettings {
   userLevel = UserLevel.unknown;
 
 
-  loadKeys(encryptionEnabled, adminKey : string = null, memberKey : string = null, guestKey : string = null, referenceId) {
+  loadKeys(encryptionEnabled, adminKey : string = null, memberKey : string = null, basicKey : string = null, serviceDataKey : string = null, localizationKey : string = null, meshNetworkKey : string = null, meshAppKey : string = null, referenceId) {
     this.encryptionEnabled = encryptionEnabled;
 
-    this.adminKey  = this._prepKey(adminKey);
-    this.memberKey = this._prepKey(memberKey);
-    this.guestKey  = this._prepKey(guestKey);
+    this.adminKey        = this._prepKey(adminKey);
+    this.memberKey       = this._prepKey(memberKey);
+    this.basicKey        = this._prepKey(basicKey);
+    this.serviceDataKey  = this._prepKey(serviceDataKey);
+    this.localizationKey = this._prepKey(localizationKey);
+    this.meshNetworkKey  = this._prepKey(meshNetworkKey);
+    this.meshAppKey      = this._prepKey(meshAppKey);
 
     this.referenceId = referenceId;
 
@@ -58,8 +66,8 @@ export class BluenetSettings {
     else if (this.memberKey.length == 16) {
       this.userLevel = UserLevel.member
     }
-    else if (this.guestKey.length == 16) {
-      this.userLevel = UserLevel.guest;
+    else if (this.basicKey.length == 16) {
+      this.userLevel = UserLevel.basic;
     }
     else {
       this.userLevel = UserLevel.unknown

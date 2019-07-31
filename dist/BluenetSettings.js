@@ -12,7 +12,7 @@ class BluenetSettings {
         this.encryptionEnabled = true;
         this.adminKey = null;
         this.memberKey = null;
-        this.guestKey = null;
+        this.basicKey = null;
         this.setupKey = null;
         this.referenceId = null;
         this.sessionNonce = null;
@@ -24,7 +24,7 @@ class BluenetSettings {
         this.encryptionEnabled = encryptionEnabled;
         this.adminKey = this._prepKey(adminKey);
         this.memberKey = this._prepKey(memberKey);
-        this.guestKey = this._prepKey(guestKey);
+        this.basicKey = this._prepKey(guestKey);
         this.referenceId = referenceId;
         this.initializedKeys = true;
         this.determineUserLevel();
@@ -50,7 +50,7 @@ class BluenetSettings {
         else if (this.memberKey.length == 16) {
             this.userLevel = exports.UserLevel.member;
         }
-        else if (this.guestKey.length == 16) {
+        else if (this.basicKey.length == 16) {
             this.userLevel = exports.UserLevel.guest;
         }
         else {

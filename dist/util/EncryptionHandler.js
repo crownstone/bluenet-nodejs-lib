@@ -140,7 +140,7 @@ class EncryptionHandler {
                 key = settings.memberKey;
                 break;
             case BluenetSettings_1.UserLevel.guest:
-                key = settings.guestKey;
+                key = settings.basicKey;
                 break;
             case BluenetSettings_1.UserLevel.setup:
                 key = settings.setupKey;

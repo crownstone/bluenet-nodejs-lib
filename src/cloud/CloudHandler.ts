@@ -4,7 +4,7 @@ const sha1 = require('sha-1');
 
 export class CloudHandler {
 
-  token = null;
+  token  = null;
   userId = null;
 
   constructor() {}
@@ -20,13 +20,21 @@ export class CloudHandler {
       })
   }
 
+
   getKeys(sphereId) {
-    return CLOUD.forUser(this.userId).getKeys()
+    return CLOUD.forUser(this.userId).getKeys(sphereId)
       .then((results) => {
         if (sphereId) {
           for (let i = 0; i < results.length; i++) {
             if (results[i].sphereId === sphereId) {
-              return results[i].keys;
+              let keyData = {};
+              for (let j = 0; j < results[i].sphereKeys.length; j++) {
+                let key = results[i].sphereKeys[j];
+                if (key.ttl == 0) {
+                  keyData[key.keyType] = key.key;
+                }
+              }
+              return keyData
             }
           }
           throw ("Unknown SphereId Provided")

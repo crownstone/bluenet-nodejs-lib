@@ -18,7 +18,6 @@ export class BleHandler {
   connectionSessionId = null;
   connectionPending = false;
 
-
   constructor(settings) {
     this.settings = settings;
   }

@@ -186,8 +186,8 @@ export class EncryptionHandler {
       case UserLevel.member:
         key = settings.memberKey;
         break;
-      case UserLevel.guest:
-        key = settings.guestKey;
+      case UserLevel.basic:
+        key = settings.basicKey;
         break;
       case UserLevel.setup:
         key = settings.setupKey;

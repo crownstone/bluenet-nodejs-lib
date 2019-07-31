@@ -94,11 +94,13 @@ export const user = {
     );
   },
 
-  getKeys: function(background = true) {
+
+  getKeys: function(cloudSphereId = undefined, cloudStoneId = undefined, background = true) {
     return this._setupRequest(
       'GET',
-      'users/{id}/keys',
-      {background : background}
+      'users/{id}/keysV2',
+      {data: { sphereId: cloudSphereId, stoneId: cloudStoneId }, background : background},
+      "query"
     );
   },
 
