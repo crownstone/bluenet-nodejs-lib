@@ -52,13 +52,6 @@ exports.user = {
         return this._setupRequest('GET', '/users/userId', { background });
     },
     /**
-     *  CLOUD.forUser(userId).getUserLocation().then((data) => { ... use data })
-     * @returns {*}
-     */
-    getUserLocation: function (background = true) {
-        return this._setupRequest('GET', '/users/{id}/currentLocation', { background });
-    },
-    /**
   
     /**
      *
@@ -83,8 +76,8 @@ exports.user = {
     requestPasswordResetEmail: function (options = {}) {
         return this._setupRequest('POST', 'users/reset', { data: { email: options.email }, background: options.background }, 'body');
     },
-    getKeys: function (background = true) {
-        return this._setupRequest('GET', 'users/{id}/keys', { background: background });
+    getKeys: function (cloudSphereId = undefined, cloudStoneId = undefined, background = true) {
+        return this._setupRequest('GET', 'users/{id}/keysV2', { data: { sphereId: cloudSphereId, stoneId: cloudStoneId }, background: background }, "query");
     },
 };
 //# sourceMappingURL=user.js.map

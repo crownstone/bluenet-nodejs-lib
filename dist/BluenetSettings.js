@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserLevel = {
     admin: 0,
     member: 1,
-    guest: 2,
+    basic: 2,
     setup: 100,
     unknown: 255,
 };
@@ -13,6 +13,10 @@ class BluenetSettings {
         this.adminKey = null;
         this.memberKey = null;
         this.basicKey = null;
+        this.serviceDataKey = null;
+        this.localizationKey = null;
+        this.meshNetworkKey = null;
+        this.meshAppKey = null;
         this.setupKey = null;
         this.referenceId = null;
         this.sessionNonce = null;
@@ -20,11 +24,15 @@ class BluenetSettings {
         this.temporaryDisable = false;
         this.userLevel = exports.UserLevel.unknown;
     }
-    loadKeys(encryptionEnabled, adminKey = null, memberKey = null, guestKey = null, referenceId) {
+    loadKeys(encryptionEnabled, adminKey = null, memberKey = null, basicKey = null, serviceDataKey = null, localizationKey = null, meshNetworkKey = null, meshAppKey = null, referenceId) {
         this.encryptionEnabled = encryptionEnabled;
         this.adminKey = this._prepKey(adminKey);
         this.memberKey = this._prepKey(memberKey);
-        this.basicKey = this._prepKey(guestKey);
+        this.basicKey = this._prepKey(basicKey);
+        this.serviceDataKey = this._prepKey(serviceDataKey);
+        this.localizationKey = this._prepKey(localizationKey);
+        this.meshNetworkKey = this._prepKey(meshNetworkKey);
+        this.meshAppKey = this._prepKey(meshAppKey);
         this.referenceId = referenceId;
         this.initializedKeys = true;
         this.determineUserLevel();
@@ -51,7 +59,7 @@ class BluenetSettings {
             this.userLevel = exports.UserLevel.member;
         }
         else if (this.basicKey.length == 16) {
-            this.userLevel = exports.UserLevel.guest;
+            this.userLevel = exports.UserLevel.basic;
         }
         else {
             this.userLevel = exports.UserLevel.unknown;

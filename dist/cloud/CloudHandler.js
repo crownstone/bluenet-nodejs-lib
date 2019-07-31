@@ -16,19 +16,20 @@ class CloudHandler {
             this.userId = result.userId;
         });
     }
-    // getCurrentSphereId(userData) {
-    //   return this.login(userData)
-    //     .then(() => {
-    //       CLOUD.getDevices();
-    //     })
-    // }
     getKeys(sphereId) {
-        return cloudAPI_1.CLOUD.forUser(this.userId).getKeys()
+        return cloudAPI_1.CLOUD.forUser(this.userId).getKeys(sphereId)
             .then((results) => {
             if (sphereId) {
                 for (let i = 0; i < results.length; i++) {
                     if (results[i].sphereId === sphereId) {
-                        return results[i].keys;
+                        let keyData = {};
+                        for (let j = 0; j < results[i].sphereKeys.length; j++) {
+                            let key = results[i].sphereKeys[j];
+                            if (key.ttl == 0) {
+                                keyData[key.keyType] = key.key;
+                            }
+                        }
+                        return keyData;
                     }
                 }
                 throw ("Unknown SphereId Provided");

@@ -99,6 +99,18 @@ class ControlPacketsGenerator {
         let data = Buffer.concat([prefix, adminKey, memberKey, guestKey, meshBuffer, uuidBuffer, ibeaconBuffer]);
         return new BlePackets_1.ControlPacket(BluenetTypes_1.ControlType.SETUP).loadByteArray(data).getPacket();
     }
+    static getSetupPacketV2(sphereUid, crownstoneId, adminKey, memberKey, basicKey, serviceDataKey, localizationKey, meshNetworkKey, meshAppKey, meshDeviceKey, ibeaconUUID, ibeaconMajor, ibeaconMinor) {
+        let prefix = Buffer.alloc(2);
+        prefix.writeUInt8(crownstoneId, 0);
+        prefix.writeUInt8(sphereUid, 1);
+        let processedUUID = ibeaconUUID.replace(/:/g, "").replace(/-/g, "");
+        let uuidBuffer = Buffer.from(Buffer.from(processedUUID, 'hex').reverse());
+        let ibeaconBuffer = Buffer.alloc(4);
+        ibeaconBuffer.writeUInt16LE(ibeaconMajor, 0);
+        ibeaconBuffer.writeUInt16LE(ibeaconMinor, 2);
+        let data = Buffer.concat([prefix, adminKey, memberKey, basicKey, serviceDataKey, localizationKey, meshDeviceKey, meshAppKey, meshNetworkKey, uuidBuffer, ibeaconBuffer]);
+        return new BlePackets_1.ControlPacket(BluenetTypes_1.ControlType.SETUP).loadByteArray(data).getPacket();
+    }
 }
 exports.ControlPacketsGenerator = ControlPacketsGenerator;
 //# sourceMappingURL=ControlPackets.js.map

@@ -2,7 +2,7 @@
 export declare const UserLevel: {
     admin: number;
     member: number;
-    guest: number;
+    basic: number;
     setup: number;
     unknown: number;
 };
@@ -10,14 +10,18 @@ export declare class BluenetSettings {
     encryptionEnabled: boolean;
     adminKey: Buffer;
     memberKey: Buffer;
-    guestKey: Buffer;
+    basicKey: Buffer;
+    serviceDataKey: Buffer;
+    localizationKey: Buffer;
+    meshNetworkKey: Buffer;
+    meshAppKey: Buffer;
     setupKey: Buffer;
     referenceId: string;
     sessionNonce: Buffer;
     initializedKeys: boolean;
     temporaryDisable: boolean;
     userLevel: number;
-    loadKeys(encryptionEnabled: any, adminKey: string, memberKey: string, guestKey: string, referenceId: any): void;
+    loadKeys(encryptionEnabled: any, adminKey: string, memberKey: string, basicKey: string, serviceDataKey: string, localizationKey: string, meshNetworkKey: string, meshAppKey: string, referenceId: any): void;
     _prepKey(key: any): Buffer;
     determineUserLevel(): void;
     invalidateSessionNonce(): void;

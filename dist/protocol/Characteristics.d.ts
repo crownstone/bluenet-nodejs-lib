@@ -21,6 +21,7 @@ export declare const SetupCharacteristics: {
     GoToDFU: string;
     SetupControl: string;
     SessionNonce: string;
+    SetupControlV2: string;
 };
 export declare const GeneralCharacteristics: {
     Temperature: string;

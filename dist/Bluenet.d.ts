@@ -16,11 +16,11 @@ export default class Bluenet {
      * @param {string} referenceId
      * @param {boolean} encryptionEnabled
      */
-    setSettings(keys: any, referenceId?: string, encryptionEnabled?: boolean): void;
+    setSettings(keys: keyMap, referenceId?: string, encryptionEnabled?: boolean): void;
     linkCloud(userData: any): Promise<{}> | Promise<void>;
     connect(connectData: any): Promise<void>;
     wait(seconds: any): Promise<{}>;
-    setupCrownstone(handle: any, crownstoneId: any, meshAccessAddress: any, ibeaconUUID: any, ibeaconMajor: any, ibeaconMinor: any): Promise<{}>;
+    setupCrownstone(handle: any, sphereUid: any, crownstoneId: any, meshAccessAddress: any, meshDeviceKey: any, ibeaconUUID: any, ibeaconMajor: any, ibeaconMinor: any): Promise<{}>;
     disconnect(): Promise<{}>;
     on(topic: any, callback: any): any;
 }

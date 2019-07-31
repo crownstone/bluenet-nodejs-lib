@@ -33,4 +33,5 @@ export declare class ControlPacketsGenerator {
     static getAllowDimmingPacket(allow: any): Buffer;
     static getLockSwitchPacket(lock: any): Buffer;
     static getSetupPacket(type: any, crownstoneId: any, adminKey: Buffer, memberKey: Buffer, guestKey: Buffer, meshAccessAddress: any, ibeaconUUID: any, ibeaconMajor: any, ibeaconMinor: any): Buffer;
+    static getSetupPacketV2(sphereUid: any, crownstoneId: any, adminKey: Buffer, memberKey: Buffer, basicKey: Buffer, serviceDataKey: Buffer, localizationKey: Buffer, meshNetworkKey: Buffer, meshAppKey: Buffer, meshDeviceKey: Buffer, ibeaconUUID: any, ibeaconMajor: any, ibeaconMinor: any): Buffer;
 }

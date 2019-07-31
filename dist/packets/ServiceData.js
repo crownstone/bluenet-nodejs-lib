@@ -42,6 +42,7 @@ class ServiceData {
             this.opCode = this.data.readUInt8(0);
             switch (this.opCode) {
                 case 5:
+                case 7:
                     Parsers_1.parseOpCode5(this, this.data);
                     break;
                 case 6:
